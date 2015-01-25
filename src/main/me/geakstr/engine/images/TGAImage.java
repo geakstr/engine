@@ -33,6 +33,14 @@ public class TGAImage {
         this.pixels = pixels;
     }
 
+    public void set(int x, int y, int color) {
+        pixels[x + y * header.width] = color;
+    }
+
+    public int get(int x, int y) {
+        return pixels[x + y * header.width];
+    }
+
     public BufferedImage buildBufferedImage(final boolean flipVertically) {
         BufferedImage bufferedImage = buildBufferedImage();
 
@@ -189,25 +197,53 @@ public class TGAImage {
         return pixels;
     }
 
-    private int buildPixel(final byte[] p, final int bytes, final int offset) {
+    private int buildPixel(final byte[] data, final int bytes, final int offset) {
         int argb = 0;
         if (bytes == 4) {
-            argb |= (p[3 + offset] & 255) << 24;
-            argb |= (p[2 + offset] & 255) << 16;
-            argb |= (p[1 + offset] & 255) << 8;
-            argb |= (p[offset] & 255);
+            argb |= (data[3 + offset] & 255) << 24;
+            argb |= (data[2 + offset] & 255) << 16;
+            argb |= (data[1 + offset] & 255) << 8;
+            argb |= (data[offset] & 255);
         } else if (bytes == 3) {
             argb |= 0xff000000;
-            argb |= (p[2 + offset] & 255) << 16;
-            argb |= (p[1 + offset] & 255) << 8;
-            argb |= (p[0] & 255);
+            argb |= (data[2 + offset] & 255) << 16;
+            argb |= (data[1 + offset] & 255) << 8;
+            argb |= (data[0] & 255);
         } else if (bytes == 2) {
-            argb |= (((p[1 + offset] & 0x80)) & 255) << 24;
-            argb |= (((p[1 + offset] & 0x7c) << 1) & 255) << 16;
-            argb |= ((((p[1 + offset] & 0x03) << 6) | ((p[offset] & 0xe0) >> 2)) & 255) << 8;
-            argb |= (((p[offset] & 0x1f) << 3) & 255);
+            argb |= (((data[1 + offset] & 0x80)) & 255) << 24;
+            argb |= (((data[1 + offset] & 0x7c) << 1) & 255) << 16;
+            argb |= ((((data[1 + offset] & 0x03) << 6) | ((data[offset] & 0xe0) >> 2)) & 255) << 8;
+            argb |= (((data[offset] & 0x1f) << 3) & 255);
         }
         return argb;
+    }
+
+    public static class Color {
+        public int r;
+        public int g;
+        public int b;
+        public int a;
+        public int val;
+
+        public Color(int r, int g, int b, int a) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+
+        public Color(int color) {
+
+        }
+
+        public static Color RGBAToColor(int r, int g, int b, int a) {
+            int argb = 0;
+            argb |= a;
+            argb |= r;
+            argb |= g;
+            argb |= b;
+            return new Color(argb);
+        }
     }
 
     public static class Header {
