@@ -50,7 +50,7 @@ public class TGAImage {
         return bufferedImage;
     }
 
-    public void writeTiFile(String fileName) {
+    public void writeToFile(String fileName) {
         DataOutputStream out = null;
 
         try {

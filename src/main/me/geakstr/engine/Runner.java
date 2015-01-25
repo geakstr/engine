@@ -22,7 +22,7 @@ public class Runner {
                     TGAImage image = null;
                     try {
                         image = new TGAImage("image.tga");
-                        image.writeTiFile("output.tga");
+                        image.writeToFile("output.tga");
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.exit(1);
