@@ -21,7 +21,7 @@ public class Runner {
 
                     TGAImage image = null;
                     try {
-                        image = new TGAImage("image.tga");
+                        image = new TGAImage("src/resources/tga/image.tga");
                         image.writeToFile("output.tga");
                     } catch (Exception e) {
                         e.printStackTrace();

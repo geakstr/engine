@@ -160,11 +160,13 @@ public class TGAImage {
         assert bytes >= 2;
 
         int idx = 0;
-        while (idx < n) {
-            if (header.datatypecode == 2) {
+        if (header.datatypecode == 2) {
+            while (idx < n) {
                 byteBuffer.get(data, 0, bytes);
                 pixels[idx++] = buildPixel(data, bytes, 0);
-            } else if (header.datatypecode == 10) {
+            }
+        } else if (header.datatypecode == 10) {
+            while (idx < n) {
                 byteBuffer.get(data, 0, bytes + 1);
 
                 final int chuckSize = data[0] & 0x7f;
