@@ -18,8 +18,8 @@ public class Runner {
 
             TGAImage image = null;
             try {
-                image = new TGAImage("../src/resources/tga/image.tga");
-                image.writeToFile("../output.tga");
+                image = new TGAImage("src/resources/tga/monochrome16_top_left_rle.tga");
+                image.writeToFile("output.tga");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
