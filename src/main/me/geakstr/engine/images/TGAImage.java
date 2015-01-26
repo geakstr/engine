@@ -14,7 +14,7 @@ public class TGAImage {
 
     private Header header;
     private int[] pixels;
-    
+
     private int width, height;
     private int bitsperpixel, datatypecode;
     private boolean hasAlpha;
@@ -26,7 +26,7 @@ public class TGAImage {
         this.height = header.height;
         this.bitsperpixel = header.bitsperpixel;
         this.datatypecode = header.datatypecode;
-        readPixels(header, byteBuffer);
+        readPixels(byteBuffer);
     }
 
     public void set(int x, int y, int color) {
@@ -133,6 +133,8 @@ public class TGAImage {
         header.bitsperpixel = byteBuffer.get();
         header.imagedescriptor = byteBuffer.get();
 
+        byteBuffer.position(byteBuffer.position() + header.idlength + header.colourmaptype * header.colourmaplength);
+
         hasAlpha = (header.imagedescriptor & 0x0f) != 0 || header.bitsperpixel == 32;
 
         System.err.println(header);
@@ -156,11 +158,9 @@ public class TGAImage {
         if (header.width <= 0 || header.height <= 0) {
             throw new RuntimeException("Image must have positive width and height");
         }
-
-        byteBuffer.position(byteBuffer.position() + header.idlength + header.colourmaptype * header.colourmaplength);
     }
 
-    private void readPixels(final Header header, final ByteBuffer byteBuffer) throws RuntimeException {
+    private void readPixels(final ByteBuffer byteBuffer) throws RuntimeException {
         final int n = width * height;
         final int bytes = bitsperpixel / 8;
         final byte[] data = new byte[5];
