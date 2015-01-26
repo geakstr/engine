@@ -1,18 +1,14 @@
 package main.me.geakstr.engine.model;
 
-import main.me.geakstr.engine.geometry.Vec3;
+import main.me.geakstr.engine.geometry.Vec3f;
 import main.me.geakstr.engine.utils.FileUtil;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class Model {
-    private List<Vec3> verts;
+    private List<Vec3f> verts;
     private List<List<Integer>> faces;
 
     public Model(String fileName) {
@@ -21,7 +17,7 @@ public class Model {
         readFile(fileName);
     }
 
-    public Vec3 vert(int idx) {
+    public Vec3f vert(int idx) {
         return verts.get(idx);
     }
 
@@ -48,7 +44,7 @@ public class Model {
                 float x = Float.parseFloat(tokens[1]);
                 float y = Float.parseFloat(tokens[2]);
                 float z = Float.parseFloat(tokens[3]);
-                verts.add(new Vec3(x, y, z));
+                verts.add(new Vec3f(x, y, z));
             } else if (line.startsWith("f ")) {
                 String[] tokens = line.split(" ");
                 int v1 = Integer.parseInt(tokens[1].split("/")[0]) - 1;
