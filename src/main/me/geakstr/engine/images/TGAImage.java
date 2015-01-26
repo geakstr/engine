@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 
-public class TGAImage {
+public class TGAImage implements IImage {
     public static final int DATA_TYPE_UNCOMPRESSED_RGB = 2;
     public static final int DATA_TYPE_UNCOMPRESSED_BW = 3;
     public static final int DATA_TYPE_COMPRESSED_RGB = 10;
@@ -29,12 +29,43 @@ public class TGAImage {
         readPixels(byteBuffer);
     }
 
+    public TGAImage(int width, int height, int bitsperpixel) throws RuntimeException {
+        this.header = new Header(width, height, bitsperpixel);
+        this.width = header.width;
+        this.height = header.height;
+        this.bitsperpixel = header.bitsperpixel;
+        this.datatypecode = header.datatypecode;
+        this.pixels = new int[width * height];
+    }
+
     public void set(int x, int y, int color) {
-        pixels[x + y * width] = color;
+        set(pixels, x, y, color);
     }
 
     public int get(int x, int y) {
+        return get(pixels, x, y);
+    }
+
+    public void set(int[] pixels, int x, int y, int color) {
+        if (x < 0 || y < 0 || x >= width || y >= height) {
+            return;
+        }
+        pixels[x + y * width] = color;
+    }
+
+    public int get(int[] pixels, int x, int y) {
+        if (x < 0 || y < 0 || x >= width || y >= height) {
+            return Color.BLACK.val;
+        }
         return pixels[x + y * width];
+    }
+
+    public int width() {
+        return width;
+    }
+
+    public int height() {
+        return height;
     }
 
     public BufferedImage buildBufferedImage() {
@@ -49,6 +80,11 @@ public class TGAImage {
 
         try {
             out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)));
+
+            int size = this.pixels.length;
+            int[] pixels = new int[size];
+            System.arraycopy(this.pixels, 0, pixels, 0, size);
+            flipVertically(pixels);
 
             out.write(0);
             out.write(0);
@@ -137,8 +173,6 @@ public class TGAImage {
 
         hasAlpha = (header.imagedescriptor & 0x0f) != 0 || header.bitsperpixel == 32;
 
-        System.err.println(header);
-
         if (header.datatypecode != DATA_TYPE_UNCOMPRESSED_RGB &&
                 header.datatypecode != DATA_TYPE_COMPRESSED_RGB &&
                 header.datatypecode != DATA_TYPE_UNCOMPRESSED_BW &&
@@ -193,15 +227,14 @@ public class TGAImage {
             }
         }
         if ((header.imagedescriptor & 0x20) == 0) {
-            flipVertically();
+            flipVertically(pixels);
         }
         if ((header.imagedescriptor & 0x10) != 0) {
-            flipHorizontally();
+            flipHorizontally(pixels);
         }
     }
 
-    private void flipVertically() {
-        System.out.println(width);
+    private void flipVertically(int[] pixels) {
         int half = height >> 1;
         int[] line = new int[width];
         for (int y_top = 0, y_bot = height - 1; y_top < half; y_top++, y_bot--) {
@@ -214,7 +247,11 @@ public class TGAImage {
         }
     }
 
-    private void flipHorizontally() {
+    public void flipVertically() {
+        flipVertically(pixels);
+    }
+
+    private void flipHorizontally(int[] pixels) {
         int half = width >> 1;
         for (int x = 0; x < half; x++) {
             for (int y = 0; y < height; y++) {
@@ -251,52 +288,7 @@ public class TGAImage {
                 b = (data[offset] & 255);
             }
         }
-        return Color.argbToVal(a, r, g, b);
-    }
-
-    public static class Color {
-        public int a;
-        public int r;
-        public int g;
-        public int b;
-        public int val;
-
-        public Color() {
-            this(0, 0, 0, 0);
-        }
-
-        public Color(int a, int r, int g, int b) {
-            this.a = a;
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.val = argbToVal(a, r, g, b);
-        }
-
-        public Color(int val) {
-            this.a = ((val >> 24) & 255);
-            this.r = ((val >> 16) & 255);
-            this.g = ((val >> 8) & 255);
-            this.b = (val & 255);
-            this.val = val;
-        }
-
-        public Color(Color color) {
-            this.a = color.a;
-            this.r = color.r;
-            this.g = color.g;
-            this.b = color.b;
-            this.val = color.val;
-        }
-
-        public static int argbToVal(int a, int r, int g, int b) {
-            int argb = 0;
-            argb |= a;
-            argb |= r;
-            argb |= g;
-            argb |= b;
-            return argb;
-        }
+        return Color.argb(a, r, g, b, false);
     }
 
     public static class Header {
@@ -312,6 +304,23 @@ public class TGAImage {
         public int height;
         public int bitsperpixel;
         public int imagedescriptor;
+
+        public Header() {}
+
+        public Header(int width, int height, int bitsperpixel) {
+            this.idlength = 0;
+            this.colourmaptype = 0;
+            this.datatypecode = 10;
+            this.colourmaporigin = 0;
+            this.colourmaplength = 0;
+            this.colourmapdepth = 0;
+            this.x_origin = 0;
+            this.y_origin = 0;
+            this.width = width;
+            this.height = height;
+            this.bitsperpixel = bitsperpixel;
+            this.imagedescriptor = 0;
+        }
 
         public String toString() {
             final StringBuilder ret = new StringBuilder();
