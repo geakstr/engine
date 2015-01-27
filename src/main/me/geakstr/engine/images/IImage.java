@@ -5,4 +5,5 @@ public interface IImage {
     int get(int x, int y);
     int width();
     int height();
+    void flip_vertically();
 }

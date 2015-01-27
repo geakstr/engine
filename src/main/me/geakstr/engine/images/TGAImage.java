@@ -19,14 +19,14 @@ public class TGAImage implements IImage {
     private int bitsperpixel, datatypecode;
     private boolean hasAlpha;
 
-    public TGAImage(String fileName) throws RuntimeException {
-        final ByteBuffer byteBuffer = readFileToByteBuffer(fileName);
-        readHeader(byteBuffer);
+    public TGAImage(String file_name) throws RuntimeException {
+        final ByteBuffer byte_buffer = read_file_to_byte_buffer(file_name);
+        read_header(byte_buffer);
         this.width = header.width;
         this.height = header.height;
         this.bitsperpixel = header.bitsperpixel;
         this.datatypecode = header.datatypecode;
-        readPixels(byteBuffer);
+        read_pixels(byte_buffer);
     }
 
     public TGAImage(int width, int height, int bitsperpixel) throws RuntimeException {
@@ -68,23 +68,23 @@ public class TGAImage implements IImage {
         return height;
     }
 
-    public BufferedImage buildBufferedImage() {
+    public BufferedImage build_buffered_image() {
         final int type = hasAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_BGR;
-        final BufferedImage bufferedImage = new BufferedImage(width, height, type);
-        bufferedImage.setRGB(0, 0, width, height, pixels, 0, width);
-        return bufferedImage;
+        final BufferedImage buffered_image = new BufferedImage(width, height, type);
+        buffered_image.setRGB(0, 0, width, height, pixels, 0, width);
+        return buffered_image;
     }
 
-    public void writeToFile(String fileName) {
+    public void write(String file_name) {
         DataOutputStream out = null;
 
         try {
-            out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)));
+            out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file_name)));
 
             int size = this.pixels.length;
             int[] pixels = new int[size];
             System.arraycopy(this.pixels, 0, pixels, 0, size);
-            flipVertically(pixels);
+            flip_vertically(pixels);
 
             out.write(0);
             out.write(0);
@@ -124,52 +124,52 @@ public class TGAImage implements IImage {
         }
     }
 
-    private ByteBuffer readFileToByteBuffer(final String fileName) {
-        ByteBuffer byteBuffer = null;
-        FileInputStream fileInputStream = null;
+    private ByteBuffer read_file_to_byte_buffer(final String file_name) {
+        ByteBuffer byte_buffer = null;
+        FileInputStream file_input_stream = null;
 
         try {
-            fileInputStream = new FileInputStream(new File(fileName));
-            FileChannel fileChannel = fileInputStream.getChannel();
+            file_input_stream = new FileInputStream(new File(file_name));
+            FileChannel file_channel = file_input_stream.getChannel();
 
-            byteBuffer = ByteBuffer.allocate((int) fileChannel.size());
-            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-            fileChannel.read(byteBuffer);
-            byteBuffer.flip();
+            byte_buffer = ByteBuffer.allocate((int) file_channel.size());
+            byte_buffer.order(ByteOrder.LITTLE_ENDIAN);
+            file_channel.read(byte_buffer);
+            byte_buffer.flip();
 
-            fileChannel.close();
+            file_channel.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            if (null != fileInputStream) {
+            if (null != file_input_stream) {
                 try {
-                    fileInputStream.close();
+                    file_input_stream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        return byteBuffer;
+        return byte_buffer;
     }
 
-    private void readHeader(final ByteBuffer byteBuffer) throws RuntimeException {
+    private void read_header(final ByteBuffer byte_buffer) throws RuntimeException {
         this.header = new Header();
 
-        header.idlength = byteBuffer.get();
-        header.colourmaptype = byteBuffer.get();
-        header.datatypecode = byteBuffer.get();
-        header.colourmaporigin = (byteBuffer.get() & 255) | ((byteBuffer.get() & 255) << 8);
-        header.colourmaplength = (byteBuffer.get() & 255) | ((byteBuffer.get() & 255) << 8);
-        header.colourmapdepth = byteBuffer.get();
-        header.x_origin = (byteBuffer.get() & 255) | ((byteBuffer.get() & 255) << 8);
-        header.y_origin = (byteBuffer.get() & 255) | ((byteBuffer.get() & 255) << 8);
-        header.width = (byteBuffer.get() & 255) | ((byteBuffer.get() & 255) << 8);
-        header.height = (byteBuffer.get() & 255) | ((byteBuffer.get() & 255) << 8);
-        header.bitsperpixel = byteBuffer.get();
-        header.imagedescriptor = byteBuffer.get();
+        header.idlength = byte_buffer.get();
+        header.colourmaptype = byte_buffer.get();
+        header.datatypecode = byte_buffer.get();
+        header.colourmaporigin = (byte_buffer.get() & 255) | ((byte_buffer.get() & 255) << 8);
+        header.colourmaplength = (byte_buffer.get() & 255) | ((byte_buffer.get() & 255) << 8);
+        header.colourmapdepth = byte_buffer.get();
+        header.x_origin = (byte_buffer.get() & 255) | ((byte_buffer.get() & 255) << 8);
+        header.y_origin = (byte_buffer.get() & 255) | ((byte_buffer.get() & 255) << 8);
+        header.width = (byte_buffer.get() & 255) | ((byte_buffer.get() & 255) << 8);
+        header.height = (byte_buffer.get() & 255) | ((byte_buffer.get() & 255) << 8);
+        header.bitsperpixel = byte_buffer.get();
+        header.imagedescriptor = byte_buffer.get();
 
-        byteBuffer.position(byteBuffer.position() + header.idlength + header.colourmaptype * header.colourmaplength);
+        byte_buffer.position(byte_buffer.position() + header.idlength + header.colourmaptype * header.colourmaplength);
 
         hasAlpha = (header.imagedescriptor & 0x0f) != 0 || header.bitsperpixel == 32;
 
@@ -194,7 +194,7 @@ public class TGAImage implements IImage {
         }
     }
 
-    private void readPixels(final ByteBuffer byteBuffer) throws RuntimeException {
+    private void read_pixels(final ByteBuffer byte_buffer) throws RuntimeException {
         final int n = width * height;
         final int bytes = bitsperpixel / 8;
         final byte[] data = new byte[5];
@@ -204,37 +204,37 @@ public class TGAImage implements IImage {
         int idx = 0;
         if (datatypecode == DATA_TYPE_UNCOMPRESSED_RGB || datatypecode == DATA_TYPE_UNCOMPRESSED_BW) {
             while (idx < n) {
-                byteBuffer.get(data, 0, bytes);
-                pixels[idx++] = buildPixel(data, 0);
+                byte_buffer.get(data, 0, bytes);
+                pixels[idx++] = build_pixel(data, 0);
             }
         } else if (datatypecode == DATA_TYPE_COMPRESSED_RGB || datatypecode == DATA_TYPE_COMPRESSED_BW) {
             while (idx < n) {
-                byteBuffer.get(data, 0, bytes + 1);
+                byte_buffer.get(data, 0, bytes + 1);
 
                 final int chuckSize = data[0] & 0x7f;
-                pixels[idx++] = buildPixel(data, 1);
+                pixels[idx++] = build_pixel(data, 1);
 
                 if ((data[0] & 0x80) == 0) {
                     for (int i = 0; i < chuckSize; i++) {
-                        byteBuffer.get(data, 0, bytes);
-                        pixels[idx++] = buildPixel(data, 0);
+                        byte_buffer.get(data, 0, bytes);
+                        pixels[idx++] = build_pixel(data, 0);
                     }
                 } else {
                     for (int i = 0; i < chuckSize; i++) {
-                        pixels[idx++] = buildPixel(data, 1);
+                        pixels[idx++] = build_pixel(data, 1);
                     }
                 }
             }
         }
         if ((header.imagedescriptor & 0x20) == 0) {
-            flipVertically(pixels);
+            flip_vertically(pixels);
         }
         if ((header.imagedescriptor & 0x10) != 0) {
             flipHorizontally(pixels);
         }
     }
 
-    private void flipVertically(int[] pixels) {
+    private void flip_vertically(int[] pixels) {
         int half = height >> 1;
         int[] line = new int[width];
         for (int y_top = 0, y_bot = height - 1; y_top < half; y_top++, y_bot--) {
@@ -247,10 +247,11 @@ public class TGAImage implements IImage {
         }
     }
 
-    public void flipVertically() {
-        flipVertically(pixels);
+    public void flip_vertically() {
+        flip_vertically(pixels);
     }
 
+    // TODO rewrite to pixels param
     private void flipHorizontally(int[] pixels) {
         int half = width >> 1;
         for (int x = 0; x < half; x++) {
@@ -263,7 +264,7 @@ public class TGAImage implements IImage {
         }
     }
 
-    private int buildPixel(final byte[] data, final int offset) {
+    private int build_pixel(final byte[] data, final int offset) {
         int a = 0, r = 0, g = 0, b = 0;
         if (bitsperpixel == 32) {
             a = (data[3 + offset] & 255) << 24;

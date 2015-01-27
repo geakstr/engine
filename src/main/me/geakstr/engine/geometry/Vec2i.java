@@ -8,6 +8,11 @@ public class Vec2i {
         this.y = y;
     }
 
+    public Vec2i(float x, float y) {
+        this.x = (int) x;
+        this.y = (int) y;
+    }
+
     public Vec2i add(Vec2i v) {
         return new Vec2i(x + v.x, y + v.y);
     }

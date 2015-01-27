@@ -9,6 +9,18 @@ public class Vec3i {
         this.z = z;
     }
 
+    public Vec3i(float x, float y, float z) {
+        this.x = (int) x;
+        this.y = (int) y;
+        this.z = (int) z;
+    }
+
+    public Vec3i(double x, double y, double z) {
+        this.x = (int) x;
+        this.y = (int) y;
+        this.z = (int) z;
+    }
+
     public Vec3i add(Vec3i v) {
         return new Vec3i(x + v.x, y + v.y, z + v.z);
     }
