@@ -39,11 +39,11 @@ public class Runner {
                 Vec3f light_dir = new Vec3f(0, 0, -1);
 
                 for (int i = 0; i < model.facesSize(); i++) {
-                    List<Integer> face = model.face(i);
+                    List<Integer> face = model.f(i);
                     Vec3i screen_coords[] = new Vec3i[3];
                     Vec3f world_coords[] = new Vec3f[3];
                     for (int j = 0; j < 3; j++) {
-                        Vec3f v = model.vert(face.get(j));
+                        Vec3f v = model.v(face.get(j));
                         screen_coords[j] = new Vec3i((int) ((v.x + 1.) * image.width() / 2.), (int) ((v.y + 1.) * image.height() / 2.), (int) ((v.z + 1.) * 255 / 2.));
                         world_coords[j] = v;
                     }
@@ -51,7 +51,12 @@ public class Runner {
                     n.normalize();
                     float intensity = n.mul(light_dir);
                     if (intensity > 0) {
-                        Renderer.triangle(screen_coords[0], screen_coords[1], screen_coords[2], image, Color.rgba((int) (intensity * 255), (int) (intensity * 255), (int) (intensity * 255), 255), zbuffer);
+                        Renderer.triangle(screen_coords[0],
+                        		screen_coords[1],
+                        		screen_coords[2],
+                        		image,
+                        		Color.rgba((int) (intensity * 250), (int) (intensity * 250), (int) (intensity * 250), 255),
+                        		zbuffer);
                     }
                 }
 

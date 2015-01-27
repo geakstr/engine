@@ -66,6 +66,10 @@ public class FileUtil {
             }
             return line;
         }
+        
+        public String[] tokens() {
+        	return line().trim().split("\\s+");
+        }
 
         public void close() {
             if (null != in) {
