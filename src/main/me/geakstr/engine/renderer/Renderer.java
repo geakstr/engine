@@ -107,7 +107,7 @@ public class Renderer {
                 if (zbuffer[idx] < P.z) {
                     zbuffer[idx] = P.z;
                     Color color = new Color(model.diffuse(uvP));
-                    image.set(P.x, P.y, Color.rgb((int) (color.r * intensity), (int) (color.g * intensity), (int) (color.b * intensity)));
+                    image.set(P.x, P.y, Color.rgb(color.r * intensity, color.g * intensity, color.b * intensity));
                 }
             }
         }

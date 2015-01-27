@@ -25,6 +25,10 @@ public class Color {
         this.val = argb(a, r, g, b);
     }
 
+    public Color(float a, float r, float g, float b) {
+        this((int) a, (int) r, (int) g, (int) b);
+    }
+
     public Color(int val) {
         this.a = ((val >> 24) & 255);
         this.r = ((val >> 16) & 255);
@@ -57,23 +61,47 @@ public class Color {
         return argb;
     }
 
+    public static int argb(float a, float r, float g, float b, boolean shift) {
+        return argb((int) a, (int) r, (int) g, (int) b, shift);
+    }
+
     public static int argb(int a, int r, int g, int b) {
         return argb(a, r, g, b, true);
+    }
+
+    public static int argb(float a, float r, float g, float b) {
+        return argb((int) a, (int) r, (int) g, (int) b, true);
     }
 
     public static int rgba(int r, int g, int b, int a) {
         return rgba(r, g, b, a, true);
     }
 
+    public static int rgba(float r, float g, float b, float a) {
+        return rgba((int) r, (int) g, (int) b, (int) a, true);
+    }
+
     public static int rgba(int r, int g, int b, int a, boolean shift) {
         return argb(a, r, g, b, shift);
+    }
+
+    public static int rgba(float r, float g, float b, float a, boolean shift) {
+        return rgba((int) a, (int) r, (int) g, (int) b, shift);
     }
 
     public static int rgb(int r, int g, int b) {
         return rgb(r, g, b, true);
     }
 
+    public static int rgb(float r, float g, float b) {
+        return rgb((int) r, (int) g, (int) b);
+    }
+
     public static int rgb(int r, int g, int b, boolean shift) {
         return rgba(r, g, b, 0xff000000, shift);
+    }
+
+    public static int rgb(float r, float g, float b, boolean shift) {
+        return rgb((int) r, (int) g, (int) b, shift);
     }
 }
