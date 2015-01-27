@@ -48,6 +48,6 @@ public class Vec3f {
     }
 
     public String toString() {
-        return String.format("Vec3 | x : %d; y : %d; z : %d", (int) x, (int) y, (int) z);
+        return String.format("Vec3f | x : %d; y : %d; z : %d", (int) x, (int) y, (int) z);
     }
 }

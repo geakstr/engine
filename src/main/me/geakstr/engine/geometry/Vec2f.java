@@ -16,11 +16,11 @@ public class Vec2f {
         return new Vec2f(x - v.x, y - v.y);
     }
 
-    public Vec2f mul(int f) {
+    public Vec2f mul(float f) {
         return new Vec2f(x * f, y * f);
     }
 
     public String toString() {
-        return String.format("Vec2 | x : %d; y : %d", (int) x, (int) y);
+        return String.format("Vec2f | x : %d; y : %d", (int) x, (int) y);
     }
 }
