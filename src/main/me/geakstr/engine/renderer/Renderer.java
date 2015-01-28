@@ -6,7 +6,6 @@ import main.me.geakstr.engine.geometry.Vec3i;
 import main.me.geakstr.engine.images.Color;
 import main.me.geakstr.engine.images.IImage;
 import main.me.geakstr.engine.model.Model;
-
 import static main.me.geakstr.engine.utils.Swapper.swap;
 
 public class Renderer {
@@ -65,23 +64,23 @@ public class Renderer {
     }
 
     public static void triangle(Vec3i t0, Vec3i t1, Vec3i t2,
-                                Vec2i uv0, Vec2i uv1, Vec2i uv2,
+    							float ity0, float ity1, float ity2,
                                 IImage image, Model model,
-                                float intensity, int[] zbuffer) {
+                                int[] zbuffer) {
         if (t0.y == t1.y && t0.y == t2.y) {
             return;
         }
         if (t0.y > t1.y) {
             t1 = swap(t0, t0 = t1);
-            uv1 = swap(uv0, uv0 = uv1);
+            ity1 = swap(ity0, ity0 = ity1);
         }
         if (t0.y > t2.y) {
             t2 = swap(t0, t0 = t2);
-            uv2 = swap(uv0, uv0 = uv2);
+            ity2 = swap(ity0, ity0 = ity2);
         }
         if (t1.y > t2.y) {
             t2 = swap(t1, t1 = t2);
-            uv2 = swap(uv1, uv1 = uv2);
+            ity2 = swap(ity1, ity1 = ity2);
         }
         int total_height = t2.y - t0.y;
         for (int i = 0; i < total_height; i++) {
@@ -91,23 +90,25 @@ public class Renderer {
             float beta = (float) (i - (second_half ? t1.y - t0.y : 0)) / segment_height;
             Vec3i A = t0.add(t2.sub(t0).mul(alpha));
             Vec3i B = second_half ? t1.add(t2.sub(t1).mul(beta)) : t0.add(t1.sub(t0).mul(beta));
-            Vec2i uvA = uv0.add(uv2.sub(uv0).mul(alpha));
-            Vec2i uvB = second_half ? uv1.add(uv2.sub(uv1).mul(beta)) : uv0.add(uv1.sub(uv0).mul(beta));
+            float ityA = ity0 + (ity2 - ity0) * alpha;
+            float ityB = second_half ? ity1 + (ity2 - ity1) * beta : ity0 + (ity1 - ity0) * beta;
             if (A.x > B.x) {
                 B = swap(A, A = B);
-                uvB = swap(uvA, uvA = uvB);
+                ityB = swap(ityA, ityA = ityB);
             }
             for (int j = A.x; j <= B.x; j++) {
                 float phi = (float) (B.x == A.x ? 1. : (float) (j - A.x) / (float) (B.x - A.x));
                 Vec3i P = A.add(B.sub(A).mul(phi));
-                Vec2i uvP = uvA.add(uvB.sub(uvA).mul(phi));
+                float ityP = ityA + (ityB - ityA) * phi;
                 P.x = j;
                 P.y = t0.y + i;
                 int idx = j + (t0.y + i) * image.width();
-                if (zbuffer[idx] < P.z) {
+                if (P.x >= image.width() || P.y >= image.height() || P.x<0 || P.y < 0) {
+                	continue;
+                }
+                if (idx >= 0 && idx < zbuffer.length && zbuffer[idx] < P.z) {
                     zbuffer[idx] = P.z;
-                    Color color = new Color(model.diffuse(uvP));
-                    image.set(P.x, P.y, Color.rgb(color.r * intensity, color.g * intensity, color.b * intensity));
+                    image.set(P.x, P.y, Color.WHITE.mul(ityP).val);
                 }
             }
         }

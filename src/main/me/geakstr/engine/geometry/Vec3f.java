@@ -22,6 +22,12 @@ public class Vec3f {
     public Vec3f(Vec3i v) {
     	this(v.x, v.y, v.z);
     }
+    
+    public Vec3f(Matrix m) {
+    	this.x = m.m()[0][0] / m.m()[3][0];
+    	this.y = m.m()[1][0] / m.m()[3][0];
+    	this.z = m.m()[2][0] / m.m()[3][0];
+    }
 
     public Vec3f add(Vec3f v) {
         return new Vec3f(x + v.x, y + v.y, z + v.z);

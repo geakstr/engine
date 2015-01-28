@@ -7,7 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
-import main.me.geakstr.engine.geometry.Vec2i;
+import main.me.geakstr.engine.geometry.GeometryUtils;
+import main.me.geakstr.engine.geometry.Matrix;
 import main.me.geakstr.engine.geometry.Vec3f;
 import main.me.geakstr.engine.geometry.Vec3i;
 import main.me.geakstr.engine.images.TGAImage;
@@ -30,36 +31,36 @@ public class Runner {
                 for (int i = 0; i < zbuffer.length; i++) {
                     zbuffer[i] = Integer.MIN_VALUE;
                 }
-
-                Vec3f light_dir = new Vec3f(0, 0, -1);
+                
+                Viewer viewer = new Viewer();
+                
+                
+                Matrix modelview  = Viewer.lookat(viewer.eye(), viewer.center(), new Vec3f(0, 1, 0));
+                Matrix projection = Matrix.identity(4);
+                Matrix viewport   = viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4);
+                projection.m()[3][2] = -1.f / (viewer.eye().sub(viewer.center())).norm();
 
                 for (int i = 0; i < model.f_size(); i++) {
                     int[] f = model.f(i);
                     Vec3i screen_coords[] = new Vec3i[3];
                     Vec3f world_coords[] = new Vec3f[3];
+                    float[] intensity = new float[3];
                     for (int j = 0; j < 3; j++) {
                         Vec3f v = model.v(f[j]);
-                        screen_coords[j] = new Vec3i((v.x + 1.) * image.width() / 2., (v.y + 1.) * image.height() / 2., (v.z + 1.) * 255 / 2.);
+                        screen_coords[j] = new Vec3i(viewport.mul(projection.mul(modelview.mul(GeometryUtils.v2m(v)))));
                         world_coords[j] = v;
+                        intensity[j] = model.n(i, j).mul(viewer.light_dir());
                     }
-                    Vec3f n = (world_coords[2].sub(world_coords[0])).cross(world_coords[1].sub(world_coords[0])).normalize();
-                    float intensity = n.mul(light_dir);
-                    if (intensity > 0) {
-                        Vec2i[] uv = new Vec2i[3];
-                        for (int k = 0; k < 3; k++) {
-                            uv[k] = model.uv(i, k);
-                        }
-                        Renderer.triangle(screen_coords[0],
-                                screen_coords[1],
-                                screen_coords[2],
-                                uv[0],
-                                uv[1],
-                                uv[2],
-                                image,
-                                model,
-                                intensity,
-                                zbuffer);
-                    }
+                    Renderer.triangle(screen_coords[0],
+                            screen_coords[1],
+                            screen_coords[2],
+                            intensity[0],
+                            intensity[1],
+                            intensity[2],
+                            image,
+                            model,
+                            zbuffer);
+                    
                 }
 
                 image.flip_vertically();
@@ -77,7 +78,7 @@ public class Runner {
             editorFrame.setVisible(true);
         }
     }
-
+    
     public static void main(String[] args) throws Exception {
         new Runner();
     }

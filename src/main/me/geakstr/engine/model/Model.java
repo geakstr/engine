@@ -14,6 +14,7 @@ public class Model {
     private List<Vec3f> v;
     private List<int[]> f;
     private List<Vec2f> uv;
+    private List<Vec3f> n;
 
 
     private IImage diffuse_map;
@@ -22,6 +23,7 @@ public class Model {
         this.v = new ArrayList<>();
         this.f = new ArrayList<>();
         this.uv = new ArrayList<>();
+        this.n = new ArrayList<>();
         read_model(model_file_name);
         read_texture(texture_file_name);
     }
@@ -41,6 +43,11 @@ public class Model {
 
     public int diffuse(Vec2i uv) {
         return diffuse_map.get(uv.x, uv.y);
+    }
+    
+    public Vec3f n(int f_i, int v_i) {
+        int idx = f.get(f_i)[v_i + 6];
+        return n.get(idx).normalize();
     }
 
     public int v_size() {
@@ -79,12 +86,21 @@ public class Model {
                 int u1 = Integer.parseInt(t1[1]) - 1;
                 int u2 = Integer.parseInt(t2[1]) - 1;
                 int u3 = Integer.parseInt(t3[1]) - 1;
+                
+                int n1 = Integer.parseInt(t1[2]) - 1;
+                int n2 = Integer.parseInt(t2[2]) - 1;
+                int n3 = Integer.parseInt(t3[2]) - 1;
 
-                f.add(new int[]{v1, v2, v3, u1, u2, u3});
+                f.add(new int[]{v1, v2, v3, u1, u2, u3, n1, n2, n3});
             } else if ("vt".equals(tokens[0])) {
                 float u = Float.parseFloat(tokens[1]);
                 float v = Float.parseFloat(tokens[2]);
                 uv.add(new Vec2f(u, v));
+            } else if ("vn".equals(tokens[0])) {
+            	float x = Float.parseFloat(tokens[1]);
+            	float y = Float.parseFloat(tokens[2]);
+            	float z = Float.parseFloat(tokens[3]);
+            	n.add(new Vec3f(x, y, z));
             }
         }
 

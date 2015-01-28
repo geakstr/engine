@@ -10,15 +10,25 @@ public class Vec3i {
     }
 
     public Vec3i(float x, float y, float z) {
-        this.x = (int) (x + 0.5);
-        this.y = (int) (y + 0.5);
-        this.z = (int) (z + 0.5);
+        this.x = (int) (x);
+        this.y = (int) (y);
+        this.z = (int) (z);
     }
 
     public Vec3i(double x, double y, double z) {
         this.x = (int) x;
         this.y = (int) y;
         this.z = (int) z;
+    }
+    
+    public Vec3i(Vec3f v) {
+    	this(v.x, v.y, v.z);
+    }
+    
+    public Vec3i(Matrix m) {
+    	this.x = (int) (m.m()[0][0] / m.m()[3][0]);
+    	this.y = (int) (m.m()[1][0] / m.m()[3][0]);
+    	this.z = (int) (m.m()[2][0] / m.m()[3][0]);
     }
 
     public Vec3i add(Vec3i v) {
