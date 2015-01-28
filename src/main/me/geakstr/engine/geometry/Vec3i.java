@@ -10,9 +10,9 @@ public class Vec3i {
     }
 
     public Vec3i(float x, float y, float z) {
-        this.x = (int) x;
-        this.y = (int) y;
-        this.z = (int) z;
+        this.x = (int) (x + 0.5);
+        this.y = (int) (y + 0.5);
+        this.z = (int) (z + 0.5);
     }
 
     public Vec3i(double x, double y, double z) {

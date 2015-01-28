@@ -22,7 +22,7 @@ public class Runner {
 
             TGAImage image = null;
             try {
-                Model model = new Model("src/resources/model/african_head.obj", "src/resources/tga/african_head_diffuse.tga");
+                Model model = new Model("../src/resources/model/african_head.obj", "../src/resources/tga/african_head_diffuse.tga");
 
                 image = new TGAImage(600, 600, 32);
 

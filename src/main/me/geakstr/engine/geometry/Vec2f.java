@@ -21,6 +21,6 @@ public class Vec2f {
     }
 
     public String toString() {
-        return String.format("Vec2f | x : %d; y : %d", (int) x, (int) y);
+        return String.format("Vec2f | x : %f; y : %f", x, y);
     }
 }

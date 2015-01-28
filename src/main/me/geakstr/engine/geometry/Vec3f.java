@@ -8,6 +8,20 @@ public class Vec3f {
         this.y = y;
         this.z = z;
     }
+    
+    public Vec3f(double x, double y, double z) {
+        this.x = (float) x;
+        this.y = (float) y;
+        this.z = (float) z;
+    }
+    
+    public Vec3f(Vec3f v) {
+    	this(v.x, v.y, v.z);
+    }
+    
+    public Vec3f(Vec3i v) {
+    	this(v.x, v.y, v.z);
+    }
 
     public Vec3f add(Vec3f v) {
         return new Vec3f(x + v.x, y + v.y, z + v.z);
@@ -48,6 +62,6 @@ public class Vec3f {
     }
 
     public String toString() {
-        return String.format("Vec3f | x : %d; y : %d; z : %d", (int) x, (int) y, (int) z);
+        return String.format("Vec3f | x : %f; y : %f; z : %f", x, y, z);
     }
 }
