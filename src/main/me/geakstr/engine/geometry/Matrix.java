@@ -50,6 +50,10 @@ public class Matrix {
 	    }
 	    return ret;
 	}
+
+	public Matrix mul(VecF v) {
+		return mul(GeometryUtils.v2m(v));
+	}
 	
 	public Matrix transpose() {
 		Matrix ret = new Matrix(cols, rows);

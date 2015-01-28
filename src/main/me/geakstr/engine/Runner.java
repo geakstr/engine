@@ -7,10 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
-import main.me.geakstr.engine.geometry.GeometryUtils;
-import main.me.geakstr.engine.geometry.Matrix;
-import main.me.geakstr.engine.geometry.Vec3f;
-import main.me.geakstr.engine.geometry.Vec3i;
+import main.me.geakstr.engine.geometry.*;
 import main.me.geakstr.engine.images.TGAImage;
 import main.me.geakstr.engine.model.Model;
 import main.me.geakstr.engine.renderer.Renderer;
@@ -23,7 +20,8 @@ public class Runner {
 
             TGAImage image = null;
             try {
-                Model model = new Model("../src/resources/model/african_head.obj", "../src/resources/tga/african_head_diffuse.tga");
+                long startTime = System.currentTimeMillis();
+                Model model = new Model("src/resources/model/african_head.obj", "src/resources/tga/african_head_diffuse.tga");
 
                 image = new TGAImage(600, 600, 32);
 
@@ -31,23 +29,24 @@ public class Runner {
                 for (int i = 0; i < zbuffer.length; i++) {
                     zbuffer[i] = Integer.MIN_VALUE;
                 }
-                
+
                 Viewer viewer = new Viewer();
-                
-                
-                Matrix modelview  = Viewer.lookat(viewer.eye(), viewer.center(), new Vec3f(0, 1, 0));
+
+
+                Matrix modelview = Viewer.lookat(viewer.eye(), viewer.center(), new VecF(0, 1, 0));
                 Matrix projection = Matrix.identity(4);
-                Matrix viewport   = viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4);
+                Matrix viewport = viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4);
                 projection.m()[3][2] = -1.f / (viewer.eye().sub(viewer.center())).norm();
 
                 for (int i = 0; i < model.f_size(); i++) {
                     int[] f = model.f(i);
-                    Vec3i screen_coords[] = new Vec3i[3];
-                    Vec3f world_coords[] = new Vec3f[3];
+                    VecI screen_coords[] = new VecI[3];
+                    VecF world_coords[] = new VecF[3];
+                    VecF uv[] = new VecF[3];
                     float[] intensity = new float[3];
                     for (int j = 0; j < 3; j++) {
-                        Vec3f v = model.v(f[j]);
-                        screen_coords[j] = new Vec3i(viewport.mul(projection.mul(modelview.mul(GeometryUtils.v2m(v)))));
+                        VecF v = model.v(f[j]);
+                        screen_coords[j] = new VecI(viewport.mul(projection.mul(modelview.mul(v))));
                         world_coords[j] = v;
                         intensity[j] = model.n(i, j).mul(viewer.light_dir());
                     }
@@ -60,10 +59,14 @@ public class Runner {
                             image,
                             model,
                             zbuffer);
-                    
+
                 }
 
                 image.flip_vertically();
+                long stopTime = System.currentTimeMillis();
+                long elapsedTime = stopTime - startTime;
+                System.out.println(elapsedTime);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
@@ -78,7 +81,7 @@ public class Runner {
             editorFrame.setVisible(true);
         }
     }
-    
+
     public static void main(String[] args) throws Exception {
         new Runner();
     }
