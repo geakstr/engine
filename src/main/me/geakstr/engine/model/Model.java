@@ -30,6 +30,10 @@ public class Model {
         return v.get(idx);
     }
 
+    public VecF v(int f_i, int v_i) {
+        return v.get(f.get(f_i)[v_i]);
+    }
+
     public int[] f(int idx) {
         return f.get(idx);
     }
@@ -43,7 +47,7 @@ public class Model {
         return diffuse_map.get(uv.c[0], uv.c[1]);
     }
 
-    public VecF vn(int f_i, int v_i) throws Exception {
+    public VecF vn(int f_i, int v_i) {
         int idx = f.get(f_i)[v_i + 6];
         return vn.get(idx).normalize();
     }

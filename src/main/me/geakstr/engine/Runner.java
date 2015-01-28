@@ -30,7 +30,7 @@ public class Runner {
                     zbuffer[i] = Integer.MIN_VALUE;
                 }
 
-                Viewer viewer = new Viewer();
+                Viewer viewer = new Viewer(new VecF(1, -3, 1), new VecF(0, 0, 3), new VecF(0, 0, 0), Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));
 
 
                 Matrix modelview = Viewer.lookat(viewer.eye(), viewer.center(), new VecF(0, 1, 0));
@@ -42,11 +42,11 @@ public class Runner {
                     int[] f = model.f(i);
                     VecI screen_coords[] = new VecI[3];
                     VecF world_coords[] = new VecF[3];
-                    VecI uv[] = new VecI[3];
+                    VecI ut[] = new VecI[3];
                     for (int j = 0; j < 3; j++) {
                         VecF v = model.v(f[j]);
                         screen_coords[j] = new VecI(viewport.mul(projection.mul(modelview.mul(v))));
-                        uv[j] = model.vt(i, j);
+                        ut[j] = model.vt(i, j);
                         world_coords[j] = v;
                     }
                     VecF n = (world_coords[2].sub(world_coords[0])).cross(world_coords[1].sub(world_coords[0])).normalize();
@@ -54,9 +54,9 @@ public class Runner {
                     Renderer.triangle(screen_coords[0],
                             screen_coords[1],
                             screen_coords[2],
-                            uv[0],
-                            uv[1],
-                            uv[2],
+                            ut[0],
+                            ut[1],
+                            ut[2],
                             image,
                             model,
                             intensity,

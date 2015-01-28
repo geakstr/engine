@@ -7,27 +7,21 @@ public class Viewer {
     private VecF light_dir;
     private VecF eye;
     private VecF center;
-    private int depth;
 
-    public Viewer(VecF light_dir, VecF eye, VecF center, int depth) {
+    private Matrix modelview;
+    private Matrix projection;
+    private Matrix viewport;
+
+    public Viewer(VecF light_dir, VecF eye, VecF center, Matrix viewport) {
         this.light_dir = light_dir;
         this.eye = eye;
         this.center = center;
-        this.depth = depth;
-    }
 
-    public Viewer(VecF light_dir, VecF eye, int depth) {
-        this(light_dir, eye, new VecF(0, 0, 0), depth);
+        this.modelview = lookat(eye, center, new VecF(0, 1, 0));
+        this.projection = Matrix.identity(4);
+        this.viewport = viewport;
+        this.projection.m()[3][2] = -1.f / (eye.sub(center)).norm();
     }
-
-    public Viewer(int depth) {
-        this(new VecF(1, -3, 1), new VecF(1, 1, 3), new VecF(0, 0, 0), depth);
-    }
-
-    public Viewer() {
-        this(255);
-    }
-
     public VecF light_dir() {
         return light_dir;
     }
@@ -40,19 +34,27 @@ public class Viewer {
         return center;
     }
 
-    public int depth() {
-        return depth;
+    public Matrix modelview() {
+        return modelview;
     }
 
-    public Matrix viewport(int x, int y, int w, int h) {
+    public Matrix projection() {
+        return projection;
+    }
+
+    public Matrix viewport() {
+        return viewport;
+    }
+
+    public static Matrix viewport(int x, int y, int w, int h) {
         Matrix m = Matrix.identity(4);
         m.m()[0][3] = x + w / 2.f;
         m.m()[1][3] = y + h / 2.f;
-        m.m()[2][3] = depth / 2.f;
+        m.m()[2][3] = 255 / 2.f;
 
         m.m()[0][0] = w / 2.f;
         m.m()[1][1] = h / 2.f;
-        m.m()[2][2] = depth / 2.f;
+        m.m()[2][2] = 25 / 2.f;
         return m;
     }
 

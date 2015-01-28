@@ -1,6 +1,5 @@
 package main.me.geakstr.engine.renderer;
 
-import main.me.geakstr.engine.geometry.VecF;
 import main.me.geakstr.engine.geometry.VecI;
 import main.me.geakstr.engine.images.Color;
 import main.me.geakstr.engine.images.IImage;
@@ -10,7 +9,7 @@ import static main.me.geakstr.engine.utils.Swapper.swap;
 
 public class Renderer {
     public static void triangle(VecI t0, VecI t1, VecI t2,
-                                VecI uv0, VecI uv1, VecI uv2,
+                                VecI ut0, VecI ut1, VecI ut2,
                                 IImage image, Model model,
                                 float intensity, int[] zbuffer) {
         if (t0.c[1] == t1.c[1] && t0.c[1] == t2.c[1]) {
@@ -18,15 +17,15 @@ public class Renderer {
         }
         if (t0.c[1] > t1.c[1]) {
             t1 = swap(t0, t0 = t1);
-            uv1 = swap(uv0, uv0 = uv1);
+            ut1 = swap(ut0, ut0 = ut1);
         }
         if (t0.c[1] > t2.c[1]) {
             t2 = swap(t0, t0 = t2);
-            uv2 = swap(uv0, uv0 = uv2);
+            ut2 = swap(ut0, ut0 = ut2);
         }
         if (t1.c[1] > t2.c[1]) {
             t2 = swap(t1, t1 = t2);
-            uv2 = swap(uv1, uv1 = uv2);
+            ut2 = swap(ut1, ut1 = ut2);
         }
         int total_height = t2.c[1] - t0.c[1];
         for (int i = 0; i < total_height; i++) {
@@ -36,8 +35,8 @@ public class Renderer {
             float beta = (float) (i - (second_half ? t1.c[1] - t0.c[1] : 0)) / segment_height;
             VecI A = t0.add(t2.sub(t0).mul(alpha));
             VecI B = second_half ? t1.add(t2.sub(t1).mul(beta)) : t0.add(t1.sub(t0).mul(beta));
-            VecI uvA = uv0.add(uv2.sub(uv0).mul(alpha));
-            VecI uvB = second_half ? uv1.add(uv2.sub(uv1).mul(beta)) : uv0.add(uv1.sub(uv0).mul(beta));
+            VecI uvA = ut0.add(ut2.sub(ut0).mul(alpha));
+            VecI uvB = second_half ? ut1.add(ut2.sub(ut1).mul(beta)) : ut0.add(ut1.sub(ut0).mul(beta));
             if (A.c[0] > B.c[0]) {
                 B = swap(A, A = B);
                 uvB = swap(uvA, uvA = uvB);
