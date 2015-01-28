@@ -42,22 +42,24 @@ public class Runner {
                     int[] f = model.f(i);
                     VecI screen_coords[] = new VecI[3];
                     VecF world_coords[] = new VecF[3];
-                    VecF uv[] = new VecF[3];
-                    float[] intensity = new float[3];
+                    VecI uv[] = new VecI[3];
                     for (int j = 0; j < 3; j++) {
                         VecF v = model.v(f[j]);
                         screen_coords[j] = new VecI(viewport.mul(projection.mul(modelview.mul(v))));
+                        uv[j] = model.vt(i, j);
                         world_coords[j] = v;
-                        intensity[j] = model.n(i, j).mul(viewer.light_dir());
                     }
+                    VecF n = (world_coords[2].sub(world_coords[0])).cross(world_coords[1].sub(world_coords[0])).normalize();
+                    float intensity = n.mul(viewer.light_dir());
                     Renderer.triangle(screen_coords[0],
                             screen_coords[1],
                             screen_coords[2],
-                            intensity[0],
-                            intensity[1],
-                            intensity[2],
+                            uv[0],
+                            uv[1],
+                            uv[2],
                             image,
                             model,
+                            intensity,
                             zbuffer);
 
                 }

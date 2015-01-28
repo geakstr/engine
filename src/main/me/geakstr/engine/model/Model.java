@@ -12,16 +12,16 @@ import java.util.List;
 public class Model {
     private List<VecF> v;
     private List<int[]> f;
-    private List<VecF> uv;
-    private List<VecF> n;
+    private List<VecF> vt;
+    private List<VecF> vn;
 
     private IImage diffuse_map;
 
     public Model(String model_file_name, String texture_file_name) {
         this.v = new ArrayList<>();
         this.f = new ArrayList<>();
-        this.uv = new ArrayList<>();
-        this.n = new ArrayList<>();
+        this.vt = new ArrayList<>();
+        this.vn = new ArrayList<>();
         read_model(model_file_name);
         read_texture(texture_file_name);
     }
@@ -34,18 +34,18 @@ public class Model {
         return f.get(idx);
     }
 
-    public VecI uv(int f_i, int v_i) {
+    public VecI vt(int f_i, int v_i) {
         int idx = f.get(f_i)[v_i + 3];
-        return new VecI(uv.get(idx).c[0] * diffuse_map.width(), uv.get(idx).c[1] * diffuse_map.height());
+        return new VecI(vt.get(idx).c[0] * diffuse_map.width(), vt.get(idx).c[1] * diffuse_map.height());
     }
 
-    public int diffuse(VecF uv) {
-        return diffuse_map.get((int) uv.c[0], (int) uv.c[1]);
+    public int diffuse(VecI uv) {
+        return diffuse_map.get(uv.c[0], uv.c[1]);
     }
 
-    public VecF n(int f_i, int v_i) throws Exception {
+    public VecF vn(int f_i, int v_i) throws Exception {
         int idx = f.get(f_i)[v_i + 6];
-        return n.get(idx).normalize();
+        return vn.get(idx).normalize();
     }
 
     public int v_size() {
@@ -93,12 +93,12 @@ public class Model {
             } else if ("vt".equals(tokens[0])) {
                 float u = Float.parseFloat(tokens[1]);
                 float v = Float.parseFloat(tokens[2]);
-                uv.add(new VecF(u, v));
+                vt.add(new VecF(u, v));
             } else if ("vn".equals(tokens[0])) {
                 float x = Float.parseFloat(tokens[1]);
                 float y = Float.parseFloat(tokens[2]);
                 float z = Float.parseFloat(tokens[3]);
-                n.add(new VecF(x, y, z));
+                vn.add(new VecF(x, y, z));
             }
         }
 
