@@ -38,29 +38,35 @@ public class Runner extends Component {
         } while (volatile_image.contentsLost());
     }
 
+    public static void render_model(Model model, IImage image, Viewer viewer, float offset) {
+        float[] zbuffer = new float[WIDTH * HEIGHT];
+        for (int i = 0; i < zbuffer.length; i++) {
+            zbuffer[i] = Float.MIN_VALUE;
+        }
+
+        IShader shader = new GouraudShader();
+        for (int i = 0; i < model.f_size(); i++) {
+            VecF[] screen_coords = new VecF[3];
+            for (int j = 0; j < 3; j++) {
+                screen_coords[j] = VecF.embed(shader.vertex(model, viewer, i, j), 4);
+                screen_coords[j].x(screen_coords[j].x() + offset);
+            }
+            Renderer.triangle(model, viewer, screen_coords, shader, image, zbuffer);
+        }
+    }
+
     public static void main(String[] args) {
         try {
-            Model model = new Model("src/resources/models/african_head");
             IImage image = new TGAImage(WIDTH, HEIGHT, 32);
-
-            float[] zbuffer = new float[WIDTH * HEIGHT];
-            for (int i = 0; i < zbuffer.length; i++) {
-                zbuffer[i] = Float.MIN_VALUE;
-            }
 
             Viewer viewer = new Viewer(new VecF(1, 1, 1),
                     new VecF(1, 1, 3),
                     new VecF(0, 0, 0),
                     Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));
 
-            IShader shader = new GouraudShader();
-            for (int i = 0; i < model.f_size(); i++) {
-                VecF[] screen_coords = new VecF[3];
-                for (int j = 0; j < 3; j++) {
-                    screen_coords[j] = VecF.embed(shader.vertex(model, viewer, i, j), 4);
-                }
-                Renderer.triangle(model, viewer, screen_coords, shader, image, zbuffer);
-            }
+            Model model = new Model("src/resources/models/african_head");
+            render_model(model, image, viewer, -200f);
+            render_model(model, image, viewer, 200f);
 
             image.flip_vertically();
             buffered_image = image.build_buffered_image();
