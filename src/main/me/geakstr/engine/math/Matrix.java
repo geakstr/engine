@@ -1,8 +1,5 @@
 package main.me.geakstr.engine.math;
 
-import main.me.geakstr.engine.geometry.GeometryUtils;
-import main.me.geakstr.engine.geometry.VecF;
-
 public class Matrix {
     public static final int DEFAULT_ALLOC = 4;
 
@@ -49,7 +46,7 @@ public class Matrix {
     }
 
     public Matrix mul(VecF v) {
-        return mul(GeometryUtils.v2m(v));
+        return mul(MathHelpers.v2m(v));
     }
 
     public Matrix transpose() {

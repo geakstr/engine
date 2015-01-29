@@ -1,8 +1,6 @@
-package main.me.geakstr.engine.geometry;
+package main.me.geakstr.engine.math;
 
 import java.util.Arrays;
-
-import main.me.geakstr.engine.math.Matrix;
 
 public class VecF {
     // Dimension
@@ -227,7 +225,7 @@ public class VecF {
     }
 
     public String toString() {
-        String r = "Vec" + dim + " | ";
+        String r = "Vec" + dim + "F | ";
         for (int i = 0; i < dim; i++) {
             r += i + " : " + c[i] + "; ";
         }

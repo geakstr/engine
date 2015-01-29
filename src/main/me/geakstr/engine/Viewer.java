@@ -1,6 +1,6 @@
 package main.me.geakstr.engine;
 
-import main.me.geakstr.engine.geometry.VecF;
+import main.me.geakstr.engine.math.VecF;
 import main.me.geakstr.engine.math.Matrix;
 
 public class Viewer {

@@ -1,18 +1,13 @@
 package main.me.geakstr.engine.renderer;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import main.me.geakstr.engine.Viewer;
-import main.me.geakstr.engine.geometry.VecF;
-import main.me.geakstr.engine.geometry.VecI;
+import main.me.geakstr.engine.math.VecF;
+import main.me.geakstr.engine.math.VecI;
 import main.me.geakstr.engine.images.Color;
 import main.me.geakstr.engine.images.IImage;
 
 import main.me.geakstr.engine.model.Model;
 import main.me.geakstr.engine.shaders.IShader;
-import main.me.geakstr.engine.shaders.ShaderBuffer;
 
 public class Renderer {
     public static VecF barycentric(VecF A, VecF B, VecF C, VecI P) {
@@ -51,6 +46,7 @@ public class Renderer {
         }
 
         VecI P = new VecI(2);
+        Color color = Color.BLACK;
         for (P.x(bboxmin.x()); P.x() <= bboxmax.x(); P.x(P.x() + 1)) {
             for (P.y(bboxmin.y()); P.y() <= bboxmax.y(); P.y(P.y() + 1)) {
                 VecF bar = barycentric(
@@ -68,10 +64,10 @@ public class Renderer {
                     continue;
                 }
                 if (idx >= 0 && idx < zbuffer.length) {
-                    boolean discard = shader.fragment(model, viewer, bar);
+                    boolean discard = shader.fragment(model, viewer, bar, color);
                     if (!discard) {
                         zbuffer[idx] = frag_depth;
-                        image.set(P.x(), P.y(), ShaderBuffer.color.val);
+                        image.set(P.x(), P.y(), color.val);
                     }
                 }
             }

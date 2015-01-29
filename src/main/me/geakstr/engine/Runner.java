@@ -1,6 +1,6 @@
 package main.me.geakstr.engine;
 
-import main.me.geakstr.engine.geometry.VecF;
+import main.me.geakstr.engine.math.VecF;
 import main.me.geakstr.engine.images.IImage;
 import main.me.geakstr.engine.images.TGAImage;
 import main.me.geakstr.engine.model.Model;
@@ -17,8 +17,8 @@ public class Runner extends Component {
     private VolatileImage volatile_image = null;
     private static BufferedImage buffered_image;
 
-    private final static int WIDTH = 600;
-    private final static int HEIGHT = 600;
+    private final static int WIDTH = 800;
+    private final static int HEIGHT = 800;
 
     public void paint(Graphics g) {
         if (volatile_image == null) {
@@ -40,7 +40,7 @@ public class Runner extends Component {
 
     public static void main(String[] args) {
         try {
-            Model model = new Model("src/resources/model/african_head.obj", "src/resources/tga/african_head_diffuse.tga");
+            Model model = new Model("src/resources/models/african_head");
             IImage image = new TGAImage(WIDTH, HEIGHT, 32);
 
             float[] zbuffer = new float[WIDTH * HEIGHT];
@@ -66,7 +66,7 @@ public class Runner extends Component {
             buffered_image = image.build_buffered_image();
 
             JFrame jFrame = new JFrame("Image Demo");
-            jFrame.setSize(600, 600);
+            jFrame.setSize(WIDTH, HEIGHT);
             jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             jFrame.getContentPane().add(new Runner());
             jFrame.setLocationRelativeTo(null);

@@ -38,6 +38,10 @@ public class Color {
     }
 
     public Color(Color color) {
+        set(color);
+    }
+
+    public void set(Color color) {
         this.a = color.a;
         this.r = color.r;
         this.g = color.g;

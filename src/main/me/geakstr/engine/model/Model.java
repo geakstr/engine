@@ -3,7 +3,7 @@ package main.me.geakstr.engine.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.me.geakstr.engine.geometry.VecF;
+import main.me.geakstr.engine.math.VecF;
 import main.me.geakstr.engine.images.IImage;
 import main.me.geakstr.engine.images.TGAImage;
 import main.me.geakstr.engine.utils.FileUtil;
@@ -14,15 +14,17 @@ public class Model {
     private List<VecF> vt;
     private List<VecF> vn;
 
-    private IImage diffuse_map;
+    private IImage diffuse;
+    private IImage normal;
 
-    public Model(String model_file_name, String texture_file_name) {
+    public Model(String path_to_model) {
         this.v = new ArrayList<>();
         this.f = new ArrayList<>();
         this.vt = new ArrayList<>();
         this.vn = new ArrayList<>();
-        read_model(model_file_name);
-        read_texture(texture_file_name);
+        read_model(path_to_model + "/model.obj");
+        read_diffuse(path_to_model + "/diffuse.tga");
+        read_normal(path_to_model + "/normal.tga");
     }
 
     public VecF v(int idx) {
@@ -39,11 +41,11 @@ public class Model {
 
     public VecF vt(int f_i, int v_i) {
         int idx = f.get(f_i)[v_i + 3];
-        return new VecF(vt.get(idx).x() * diffuse_map.width(), vt.get(idx).y() * diffuse_map.height());
+        return new VecF(vt.get(idx).x() * diffuse.width(), vt.get(idx).y() * diffuse.height());
     }
 
     public int diffuse(VecF uv) {
-        return diffuse_map.get((int) uv.x(), (int) uv.y());
+        return diffuse.get((int) uv.x(), (int) uv.y());
     }
 
     public VecF vn(int f_i, int v_i) {
@@ -59,9 +61,14 @@ public class Model {
         return f.size();
     }
 
-    private void read_texture(String file_name) {
-        diffuse_map = new TGAImage(file_name);
-        diffuse_map.flip_vertically();
+    private void read_diffuse(String file_name) {
+        diffuse = new TGAImage(file_name);
+        diffuse.flip_vertically();
+    }
+
+    private void read_normal(String file_name) {
+        normal = new TGAImage(file_name);
+        normal.flip_vertically();
     }
 
     private void read_model(String file_name) {
