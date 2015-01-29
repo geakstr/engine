@@ -23,14 +23,17 @@ public class Runner {
 
             IImage image = null;
             try {
-                Model model = new Model("../src/resources/model/african_head.obj", "../src/resources/tga/african_head_diffuse.tga");
+                Model model = new Model("src/resources/model/african_head.obj", "src/resources/tga/african_head_diffuse.tga");
 
                 image = new TGAImage(600, 600, 32);
 
 
-                IImage zbuffer = new TGAImage(600, 600, 8);
+                float[] zbuffer = new float[image.width() * image.height()];
+                for (int i = 0; i < zbuffer.length; i++) {
+                    zbuffer[i] = Float.MIN_VALUE;
+                }
 
-                Viewer viewer = new Viewer(new VecF(1, 1, 1), new VecF(0, 0.5, 3), new VecF(0, 0, 0), Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));
+                Viewer viewer = new Viewer(new VecF(1, 1, 1), new VecF(1, 1, 3), new VecF(0, 0, 0), Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));
 
                 IShader shader = new GouraudShader();
                 for (int i = 0; i < model.f_size(); i++) {
@@ -38,7 +41,7 @@ public class Runner {
                    for (int j = 0; j < 3; j++) {
                 	   screen_coords[j] = VecF.embed(shader.vertex(model, viewer, i, j), 4);
                    }
-                   Renderer.triangle(screen_coords, shader, image, zbuffer);
+                   Renderer.triangle(model, viewer, screen_coords, shader, image, zbuffer);
                 }
 
                 image.flip_vertically();
