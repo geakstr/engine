@@ -45,6 +45,10 @@ public class Matrix {
 		return mul(GeometryUtils.v2m(v));
 	}
 	
+	public Matrix mul(Vec4f v) {
+		return mul(GeometryUtils.v2m(v));
+	}
+	
 	public Matrix transpose() {
 		Matrix ret = new Matrix(cols, rows);
 		for (int i = 0; i < rows; i++) {

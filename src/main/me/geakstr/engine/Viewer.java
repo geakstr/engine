@@ -50,11 +50,11 @@ public class Viewer {
         Matrix m = Matrix.identity(4);
         m.m[0][3] = x + w / 2.f;
         m.m[1][3] = y + h / 2.f;
-        m.m[2][3] = 255 / 2.f;
+        m.m[2][3] = 255.f / 2.f;
 
         m.m[0][0] = w / 2.f;
         m.m[1][1] = h / 2.f;
-        m.m[2][2] = 25 / 2.f;
+        m.m[2][2] = 25.f / 2.f;
         return m;
     }
 

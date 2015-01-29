@@ -28,6 +28,16 @@ public class Vec3f {
     	this.y = m.m[1][0] / m.m[3][0];
     	this.z = m.m[2][0] / m.m[3][0];
     }
+	
+	public void set_coord(int i, float val) {
+		if (i == 0) {
+			this.x = val;
+		} else if (i == 1) {
+			this.y = val;
+		} else if (i == 2) {
+			this.z = val;
+		}
+	}
 
 	public Vec3f add(Vec3f v) {
         return new Vec3f(x + v.x, y + v.y, z + v.z);

@@ -20,6 +20,10 @@ public class Vec4f {
 	public Vec4f(Vec4f v) {
     	this(v.x, v.y, v.z, v.w);
     }
+	
+	public Vec4f(Vec3f v) {
+    	this(v.x, v.y, v.z, 1);
+    }
     
 	public Vec4f(Matrix m) {
     	this.x = m.m[0][0] / m.m[3][0];
