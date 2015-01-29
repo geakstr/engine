@@ -18,10 +18,10 @@ public class Model {
     private IImage normal;
 
     public Model(String path_to_model) {
-        this.v = new ArrayList<>();
-        this.f = new ArrayList<>();
-        this.vt = new ArrayList<>();
-        this.vn = new ArrayList<>();
+        this.v = new ArrayList();
+        this.f = new ArrayList();
+        this.vt = new ArrayList();
+        this.vn = new ArrayList();
         read_model(path_to_model + "/model.obj");
         read_diffuse(path_to_model + "/diffuse.tga");
         read_normal(path_to_model + "/normal.tga");

@@ -4,6 +4,7 @@ import main.me.geakstr.engine.math.VecF;
 import main.me.geakstr.engine.images.IImage;
 import main.me.geakstr.engine.images.TGAImage;
 import main.me.geakstr.engine.model.Model;
+import main.me.geakstr.engine.model.Models;
 import main.me.geakstr.engine.renderer.Renderer;
 import main.me.geakstr.engine.shaders.GouraudShader;
 import main.me.geakstr.engine.shaders.IShader;
@@ -64,9 +65,9 @@ public class Runner extends Component {
                     new VecF(0, 0, 0),
                     Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));
 
-            Model model = new Model("src/resources/models/african_head");
-            render_model(model, image, viewer, -200f);
-            render_model(model, image, viewer, 200f);
+            Models models = new Models();
+            render_model(models.getModel("african_head"), image, viewer, -200f);
+            render_model(models.getModel("african_head"), image, viewer, 200f);
 
             image.flip_vertically();
             buffered_image = image.build_buffered_image();
