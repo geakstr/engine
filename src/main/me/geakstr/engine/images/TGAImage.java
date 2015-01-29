@@ -69,7 +69,8 @@ public class TGAImage implements IImage {
     }
 
     public BufferedImage build_buffered_image() {
-        final int type = hasAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_BGR;
+        int type = hasAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_BGR;
+        type = bitsperpixel == 8 ? BufferedImage.TYPE_BYTE_GRAY : type;
         final BufferedImage buffered_image = new BufferedImage(width, height, type);
         buffered_image.setRGB(0, 0, width, height, pixels, 0, width);
         return buffered_image;

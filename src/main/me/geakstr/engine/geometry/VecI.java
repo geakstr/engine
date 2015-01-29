@@ -1,5 +1,7 @@
 package main.me.geakstr.engine.geometry;
 
+import java.util.Arrays;
+
 public class VecI {
     // Dimension
     public int dim;
@@ -33,6 +35,11 @@ public class VecI {
         this.c = new int[this.dim];
         System.arraycopy(v.c, 0, this.c, 0, this.dim);
     }
+    
+    public VecI(int dim) {
+    	this.dim = dim;
+    	this.c = new int[dim];
+    }
 
     public VecI(Matrix m) {
         if (m.rows() != 4) {
@@ -47,6 +54,70 @@ public class VecI {
         for (int i = 0; i < this.dim; i++) {
             c[i] = (int) (m.m()[i][0] / m.m()[3][0]);
         }
+    }
+    
+    public int x() {
+    	return c[0];
+    }
+    
+    public int y() {
+    	return c[1];
+    }
+
+    public int z() {
+    	if (c.length < 3) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	return c[2];
+    }
+    
+    public int w() {
+    	if (c.length < 4) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	return c[3];
+    }
+    
+    public int x(int x) {
+    	c[0] = x;
+    	return x;
+    }
+    
+    public int y(int y) {
+    	c[1] = y;
+    	return y;
+    }
+
+    public int z(int z) {
+    	if (c.length < 3) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	c[2] = z;
+    	return z;
+    }
+    
+    public int w(int w) {
+    	if (c.length < 4) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	c[3] = w;
+    	return w;
     }
 
     public VecI add(VecI v) {
@@ -129,6 +200,22 @@ public class VecI {
         VecI v = this.mul(l / norm());
         System.arraycopy(v.c, 0, c, 0, dim);
         return this;
+    }
+    
+    public static VecI proj(VecI a, int len) {
+    	int[] f = new int[len];
+    	Arrays.fill(f, 1);
+    	System.arraycopy(a.c, 0, f, 0, len);
+    	return new VecI(f);
+    }
+    
+    public static VecI embed(VecI a, int len) {
+    	int[] f = new int[len];
+    	Arrays.fill(f, 1);
+    	for (int i = 0; i < a.c.length; i++) {
+    		f[i] = a.c[i];
+    	}
+    	return new VecI(f);
     }
 
     public String toString() {

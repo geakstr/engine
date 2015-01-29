@@ -35,6 +35,11 @@ public class VecF {
         this.c = new float[this.dim];
         System.arraycopy(v.c, 0, this.c, 0, this.dim);
     }
+    
+    public VecF(int dim) {
+    	this.dim = dim;
+    	this.c = new float[dim];
+    }
 
     public VecF(Matrix m) {
         if (m.rows() != 4) {
@@ -81,15 +86,17 @@ public class VecF {
     	return c[3];
     }
     
-    public void x(float x) {
+    public float x(float x) {
     	c[0] = x;
+    	return x;
     }
     
-    public void y(float y) {
+    public float y(float y) {
     	c[1] = y;
+    	return y;
     }
 
-    public void z(float z) {
+    public float z(float z) {
     	if (c.length < 3) {
 	    	try {
 	            throw new Exception("The dimensions not exist");
@@ -98,9 +105,10 @@ public class VecF {
 	        }
 	    }
     	c[2] = z;
+    	return z;
     }
     
-    public void w(float w) {
+    public float w(float w) {
     	if (c.length < 4) {
 	    	try {
 	            throw new Exception("The dimensions not exist");
@@ -109,6 +117,7 @@ public class VecF {
 	        }
 	    }
     	c[3] = w;
+    	return w;
     }
 
     public VecF add(VecF v) {
@@ -163,6 +172,14 @@ public class VecF {
         }
         return r;
     }
+    
+    public VecF div(float f) {
+    	float[] r = new float[dim];
+    	for (int i = 0; i < dim; i++) {
+    		r[i] = c[i] / f;
+    	}
+    	return new VecF(r);
+    }
 
     public VecF cross(VecF v) {
         if (dim != v.c.length || dim != 3) {
@@ -197,6 +214,15 @@ public class VecF {
     	float[] f = new float[len];
     	Arrays.fill(f, 1);
     	System.arraycopy(a.c, 0, f, 0, len);
+    	return new VecF(f);
+    }
+    
+    public static VecF embed(VecF a, int len) {
+    	float[] f = new float[len];
+    	Arrays.fill(f, 1);
+    	for (int i = 0; i < a.c.length; i++) {
+    		f[i] = a.c[i];
+    	}
     	return new VecF(f);
     }
 
