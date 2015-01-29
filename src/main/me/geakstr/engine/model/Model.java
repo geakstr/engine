@@ -1,19 +1,20 @@
 package main.me.geakstr.engine.model;
 
-import main.me.geakstr.engine.geometry.VecF;
-import main.me.geakstr.engine.geometry.VecI;
-import main.me.geakstr.engine.images.IImage;
-import main.me.geakstr.engine.images.TGAImage;
-import main.me.geakstr.engine.utils.FileUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import main.me.geakstr.engine.images.IImage;
+import main.me.geakstr.engine.images.TGAImage;
+import main.me.geakstr.engine.math.Vec2f;
+import main.me.geakstr.engine.math.Vec2i;
+import main.me.geakstr.engine.math.Vec3f;
+import main.me.geakstr.engine.utils.FileUtil;
+
 public class Model {
-    private List<VecF> v;
+    private List<Vec3f> v;
     private List<int[]> f;
-    private List<VecF> vt;
-    private List<VecF> vn;
+    private List<Vec2f> vt;
+    private List<Vec3f> vn;
 
     private IImage diffuse_map;
 
@@ -26,11 +27,11 @@ public class Model {
         read_texture(texture_file_name);
     }
 
-    public VecF v(int idx) {
+    public Vec3f v(int idx) {
         return v.get(idx);
     }
 
-    public VecF v(int f_i, int v_i) {
+    public Vec3f v(int f_i, int v_i) {
         return v.get(f.get(f_i)[v_i]);
     }
 
@@ -38,16 +39,16 @@ public class Model {
         return f.get(idx);
     }
 
-    public VecI vt(int f_i, int v_i) {
+    public Vec2i vt(int f_i, int v_i) {
         int idx = f.get(f_i)[v_i + 3];
-        return new VecI(vt.get(idx).c[0] * diffuse_map.width(), vt.get(idx).c[1] * diffuse_map.height());
+        return new Vec2i(vt.get(idx).x * diffuse_map.width(), vt.get(idx).y * diffuse_map.height());
     }
 
-    public int diffuse(VecI uv) {
-        return diffuse_map.get(uv.c[0], uv.c[1]);
+    public int diffuse(Vec2i uv) {
+        return diffuse_map.get(uv.x, uv.y);
     }
 
-    public VecF vn(int f_i, int v_i) {
+    public Vec3f vn(int f_i, int v_i) {
         int idx = f.get(f_i)[v_i + 6];
         return vn.get(idx).normalize();
     }
@@ -75,7 +76,7 @@ public class Model {
                 float x = Float.parseFloat(tokens[1]);
                 float y = Float.parseFloat(tokens[2]);
                 float z = Float.parseFloat(tokens[3]);
-                v.add(new VecF(x, y, z));
+                v.add(new Vec3f(x, y, z));
             } else if ("f".equals(tokens[0])) {
                 String[] t1 = tokens[1].split("/");
                 String[] t2 = tokens[2].split("/");
@@ -97,12 +98,12 @@ public class Model {
             } else if ("vt".equals(tokens[0])) {
                 float u = Float.parseFloat(tokens[1]);
                 float v = Float.parseFloat(tokens[2]);
-                vt.add(new VecF(u, v));
+                vt.add(new Vec2f(u, v));
             } else if ("vn".equals(tokens[0])) {
                 float x = Float.parseFloat(tokens[1]);
                 float y = Float.parseFloat(tokens[2]);
                 float z = Float.parseFloat(tokens[3]);
-                vn.add(new VecF(x, y, z));
+                vn.add(new Vec3f(x, y, z));
             }
         }
 
