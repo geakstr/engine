@@ -27,6 +27,7 @@ public class Runner {
 
                 image = new TGAImage(600, 600, 32);
 
+
                 IImage zbuffer = new TGAImage(600, 600, 8);
 
                 Viewer viewer = new Viewer(new VecF(1, 1, 1), new VecF(0, 0.5, 3), new VecF(0, 0, 0), Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));

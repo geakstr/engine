@@ -2,6 +2,8 @@ package main.me.geakstr.engine.geometry;
 
 import java.util.Arrays;
 
+import main.me.geakstr.engine.math.Matrix;
+
 public class VecI {
     // Dimension
     public int dim;
@@ -42,17 +44,17 @@ public class VecI {
     }
 
     public VecI(Matrix m) {
-        if (m.rows() != 4) {
+        if (m.rows != 4) {
             try {
                 throw new Exception("Possible construct only 3 dimensional vector from 4 rows matrix");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        this.dim = m.rows() - 1;
+        this.dim = m.rows - 1;
         this.c = new int[this.dim];
         for (int i = 0; i < this.dim; i++) {
-            c[i] = (int) (m.m()[i][0] / m.m()[3][0]);
+            c[i] = (int) (m.m[i][0] / m.m[3][0]);
         }
     }
     

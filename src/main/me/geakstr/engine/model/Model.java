@@ -1,13 +1,12 @@
 package main.me.geakstr.engine.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.me.geakstr.engine.geometry.VecF;
-import main.me.geakstr.engine.geometry.VecI;
 import main.me.geakstr.engine.images.IImage;
 import main.me.geakstr.engine.images.TGAImage;
 import main.me.geakstr.engine.utils.FileUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Model {
     private List<VecF> v;
@@ -38,13 +37,13 @@ public class Model {
         return f.get(idx);
     }
 
-    public VecI vt(int f_i, int v_i) {
+    public VecF vt(int f_i, int v_i) {
         int idx = f.get(f_i)[v_i + 3];
-        return new VecI(vt.get(idx).c[0] * diffuse_map.width(), vt.get(idx).c[1] * diffuse_map.height());
+        return new VecF(vt.get(idx).x() * diffuse_map.width(), vt.get(idx).y() * diffuse_map.height());
     }
 
-    public int diffuse(VecI uv) {
-        return diffuse_map.get(uv.c[0], uv.c[1]);
+    public int diffuse(VecF uv) {
+        return diffuse_map.get((int) uv.x(), (int) uv.y());
     }
 
     public VecF vn(int f_i, int v_i) {

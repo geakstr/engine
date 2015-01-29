@@ -1,4 +1,7 @@
-package main.me.geakstr.engine.geometry;
+package main.me.geakstr.engine.math;
+
+import main.me.geakstr.engine.geometry.GeometryUtils;
+import main.me.geakstr.engine.geometry.VecF;
 
 public class Matrix {
 	public static final int DEFAULT_ALLOC = 4;
@@ -14,18 +17,6 @@ public class Matrix {
 		this.rows = rows;
 		this.cols = cols;
 		this.m = new float[rows][cols];
-	}
-	
-	public int rows() {
-		return rows;
-	}
-	
-	public int cols() {
-		return cols;
-	}
-	
-	public float[][] m() {
-		return m;
 	}
 	
 	public static Matrix identity(int d) {
