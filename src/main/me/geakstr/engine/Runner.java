@@ -14,8 +14,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 
 public class Runner extends Component {
-    private VolatileImage volatile_image;
-    private BufferedImage buffered_image;
+    private VolatileImage volatile_image = null;
+    private static BufferedImage buffered_image;
+
+    private final static int WIDTH = 600;
+    private final static int HEIGHT = 600;
 
     public void paint(Graphics g) {
         if (volatile_image == null) {
@@ -30,17 +33,18 @@ public class Runner extends Component {
                 }
                 volatile_image = createVolatileImage(WIDTH, HEIGHT);
             }
+            System.out.println("FFDS");
             volatile_image.getGraphics().drawImage(buffered_image, 0, 0, this);
             g.drawImage(volatile_image, 0, 0, this);
         } while (volatile_image.contentsLost());
     }
-
-    private void run() {
+    
+    public static void main(String[] args) {
         try {
             Model model = new Model("src/resources/model/african_head.obj", "src/resources/tga/african_head_diffuse.tga");
-            IImage image = new TGAImage(600, 600, 32);
+            IImage image = new TGAImage(WIDTH, HEIGHT, 32);
 
-            float[] zbuffer = new float[image.width() * image.height()];
+            float[] zbuffer = new float[WIDTH * HEIGHT];
             for (int i = 0; i < zbuffer.length; i++) {
                 zbuffer[i] = Float.MIN_VALUE;
             }
@@ -72,10 +76,6 @@ public class Runner extends Component {
             e.printStackTrace();
             System.exit(1);
         }
-    }
-
-    public static void main(String[] args) {
-        new Runner().run();
     }
 }
 
