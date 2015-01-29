@@ -8,5 +8,6 @@ public interface IImage {
     int width();
     int height();
     void flip_vertically();
+    void write(String file_name);
     BufferedImage build_buffered_image();
 }
