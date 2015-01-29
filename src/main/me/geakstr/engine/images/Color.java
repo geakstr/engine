@@ -60,21 +60,18 @@ public class Color {
         }
         return argb;
     }
-    
+
     public Color mul(float intensity) {
         Color color = new Color(a, r, g, b);
         intensity = (intensity > 1.f ? 1.f : (intensity < 0.f ? 0.f : intensity));
-        float r = (float) this.r;
-        float g = (float) this.g;
-        float b = (float) this.b;
-        float a = (float) this.a;
-        
-        r *= intensity;
-        g *= intensity;
-        b *= intensity;
-        a *= intensity;
-        
-        return new Color(r, g, b, a);
+
+        color.r = (int) ((float) color.r * intensity);
+        color.g = (int) ((float) color.g * intensity);
+        color.b = (int) ((float) color.b * intensity);
+        color.a = (int) ((float) color.a * intensity);
+        color.val = argb(color.a, color.r, color.g, color.b);
+
+        return color;
     }
 
     public static int argb(float a, float r, float g, float b, boolean shift) {

@@ -37,10 +37,10 @@ public class VecF {
         this.c = new float[this.dim];
         System.arraycopy(v.c, 0, this.c, 0, this.dim);
     }
-    
+
     public VecF(int dim) {
-    	this.dim = dim;
-    	this.c = new float[dim];
+        this.dim = dim;
+        this.c = new float[dim];
     }
 
     public VecF(Matrix m) {
@@ -57,69 +57,69 @@ public class VecF {
             c[i] = m.m[i][0] / m.m[3][0];
         }
     }
-    
+
     public float x() {
-    	return c[0];
+        return c[0];
     }
-    
+
     public float y() {
-    	return c[1];
+        return c[1];
     }
 
     public float z() {
-    	if (c.length < 3) {
-	    	try {
-	            throw new Exception("The dimensions not exist");
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
-    	return c[2];
+        if (c.length < 3) {
+            try {
+                throw new Exception("The dimensions not exist");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return c[2];
     }
-    
+
     public float w() {
-    	if (c.length < 4) {
-	    	try {
-	            throw new Exception("The dimensions not exist");
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
-    	return c[3];
+        if (c.length < 4) {
+            try {
+                throw new Exception("The dimensions not exist");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return c[3];
     }
-    
+
     public float x(float x) {
-    	c[0] = x;
-    	return x;
+        c[0] = x;
+        return x;
     }
-    
+
     public float y(float y) {
-    	c[1] = y;
-    	return y;
+        c[1] = y;
+        return y;
     }
 
     public float z(float z) {
-    	if (c.length < 3) {
-	    	try {
-	            throw new Exception("The dimensions not exist");
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
-    	c[2] = z;
-    	return z;
+        if (c.length < 3) {
+            try {
+                throw new Exception("The dimensions not exist");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        c[2] = z;
+        return z;
     }
-    
+
     public float w(float w) {
-    	if (c.length < 4) {
-	    	try {
-	            throw new Exception("The dimensions not exist");
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
-    	c[3] = w;
-    	return w;
+        if (c.length < 4) {
+            try {
+                throw new Exception("The dimensions not exist");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        c[3] = w;
+        return w;
     }
 
     public VecF add(VecF v) {
@@ -174,13 +174,13 @@ public class VecF {
         }
         return r;
     }
-    
+
     public VecF div(float f) {
-    	float[] r = new float[dim];
-    	for (int i = 0; i < dim; i++) {
-    		r[i] = c[i] / f;
-    	}
-    	return new VecF(r);
+        float[] r = new float[dim];
+        for (int i = 0; i < dim; i++) {
+            r[i] = c[i] / f;
+        }
+        return new VecF(r);
     }
 
     public VecF cross(VecF v) {
@@ -211,21 +211,19 @@ public class VecF {
         System.arraycopy(v.c, 0, c, 0, dim);
         return this;
     }
-    
+
     public static VecF proj(VecF a, int len) {
-    	float[] f = new float[len];
-    	Arrays.fill(f, 1);
-    	System.arraycopy(a.c, 0, f, 0, len);
-    	return new VecF(f);
+        float[] f = new float[len];
+        Arrays.fill(f, 1);
+        System.arraycopy(a.c, 0, f, 0, len);
+        return new VecF(f);
     }
-    
+
     public static VecF embed(VecF a, int len) {
-    	float[] f = new float[len];
-    	Arrays.fill(f, 1);
-    	for (int i = 0; i < a.c.length; i++) {
-    		f[i] = a.c[i];
-    	}
-    	return new VecF(f);
+        float[] f = new float[len];
+        Arrays.fill(f, 1);
+        System.arraycopy(a.c, 0, f, 0, a.c.length);
+        return new VecF(f);
     }
 
     public String toString() {

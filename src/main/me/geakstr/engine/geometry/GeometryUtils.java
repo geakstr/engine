@@ -13,19 +13,19 @@ public class GeometryUtils {
     }
 
     public static VecF m2v(Matrix m) {
-        float x = m.m[0][0] / m.m[3][0];
-        float y = m.m[1][0] / m.m[3][0];
-        float z = m.m[2][0] / m.m[3][0];
-        
-        return new VecF(x, y, z);
+        float[] r = new float[m.rows];
+        for (int i = 0; i < m.rows; i++) {
+            r[i] = m.m[i][0] / m.m[m.rows - 1][0];
+        }
+        return new VecF(r);
     }
-    
+
     public static VecF matrixToVec4f(Matrix m) {
         float x = m.m[0][0] / m.m[3][0];
         float y = m.m[1][0] / m.m[3][0];
         float z = m.m[2][0] / m.m[3][0];
         float w = m.m[3][0] / m.m[3][0];
-        
+
         return new VecF(x, y, z, w);
     }
 }
