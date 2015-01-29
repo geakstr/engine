@@ -20,8 +20,7 @@ public class Runner {
 
             TGAImage image = null;
             try {
-                long startTime = System.currentTimeMillis();
-                Model model = new Model("src/resources/model/african_head.obj", "src/resources/tga/african_head_diffuse.tga");
+                Model model = new Model("../src/resources/model/african_head.obj", "../src/resources/tga/african_head_diffuse.tga");
 
                 image = new TGAImage(600, 600, 32);
 
@@ -65,10 +64,6 @@ public class Runner {
                 }
 
                 image.flip_vertically();
-                long stopTime = System.currentTimeMillis();
-                long elapsedTime = stopTime - startTime;
-                System.out.println(elapsedTime);
-
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);

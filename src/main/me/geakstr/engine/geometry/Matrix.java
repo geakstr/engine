@@ -3,8 +3,8 @@ package main.me.geakstr.engine.geometry;
 public class Matrix {
 	public static final int DEFAULT_ALLOC = 4;
 	
-	private float[][] m;
-	private int rows, cols;
+	public float[][] m;
+	public int rows, cols;
 	
 	public Matrix() {
 		this(DEFAULT_ALLOC, DEFAULT_ALLOC);

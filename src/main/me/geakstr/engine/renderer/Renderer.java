@@ -1,13 +1,62 @@
 package main.me.geakstr.engine.renderer;
 
+import static main.me.geakstr.engine.utils.Swapper.swap;
+import main.me.geakstr.engine.geometry.VecF;
 import main.me.geakstr.engine.geometry.VecI;
 import main.me.geakstr.engine.images.Color;
 import main.me.geakstr.engine.images.IImage;
 import main.me.geakstr.engine.model.Model;
 
-import static main.me.geakstr.engine.utils.Swapper.swap;
-
 public class Renderer {
+	public static VecF barycentric(VecF A, VecF B, VecF C, VecF P) {
+	    VecF[] s = new VecF[2];
+	    
+	    s[0].x(C.x() - A.x());
+        s[0].y(B.x() - A.x());
+        s[0].z(A.x() - P.x());
+        
+        s[1].x(C.y() - A.y());
+        s[1].y(B.y() - A.y());
+        s[1].z(A.y() - P.y());
+        
+        
+	    VecF u = s[0].cross(s[1]);
+	    
+	    if (Math.abs(u.z()) > 0.01) {
+	        return new VecF(1.f - (u.x() + u.y()) / u.z(), u.y() / u.z(), u.x() / u.z());
+	    }
+	    return new VecF(-1, 1, 1);
+	}
+	
+//	public static void triangle(VecF[] pts, IImage image, IImage zbuffer) {
+//	    VecF bboxmin = new Vec2f(Float.MAX_VALUE,  Float.MAX_VALUE);
+//	    Vec2f bboxmax = new Vec2f(-Float.MAX_VALUE, -Float.MAX_VALUE);
+//	    
+//	    for (int i = 0; i < 3; i++) {	        
+//	        bboxmin.x = Math.min(bboxmin.x, pts[i].x / pts[i].w);
+//            bboxmax.x = Math.min(bboxmax.x, pts[i].x / pts[i].w);
+//            
+//            bboxmin.y = Math.min(bboxmin.y, pts[i].y / pts[i].w);
+//            bboxmax.y = Math.min(bboxmax.y, pts[i].y / pts[i].w);
+//	    }
+//	    Vec2i P;
+//	    Color color;
+//	    for (P.x = (int) bboxmin.x; P.x <= bboxmax.x; P.x++) {
+//	        for (P.y = (int) bboxmin.y; P.y <= bboxmax.y; P.y++) {
+//	            Vec3f c = barycentric(proj<2>(pts[0]/pts[0][3]), proj<2>(pts[1]/pts[1][3]), proj<2>(pts[2]/pts[2][3]), proj<2>(P));
+//	            float z = pts[0][2]*c.x + pts[1][2]*c.y + pts[2][2]*c.z;
+//	            float w = pts[0][3]*c.x + pts[1][3]*c.y + pts[2][3]*c.z;
+//	            int frag_depth = std::max(0, std::min(255, int(z/w+.5)));
+//	            if (c.x<0 || c.y<0 || c.z<0 || zbuffer.get(P.x, P.y)[0]>frag_depth) continue;
+//	            bool discard = shader.fragment(c, color);
+//	            if (!discard) {
+//	                zbuffer.set(P.x, P.y, TGAColor(frag_depth));
+//	                image.set(P.x, P.y, color);
+//	            }
+//	        }
+//	    }
+//	}
+	
     public static void triangle(VecI t0, VecI t1, VecI t2,
                                 VecI ut0, VecI ut1, VecI ut2,
                                 IImage image, Model model,

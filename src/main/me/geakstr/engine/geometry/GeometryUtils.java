@@ -17,4 +17,13 @@ public class GeometryUtils {
         }
         return new VecF(r);
     }
+    
+    public static VecF matrixToVec4f(Matrix m) {
+        float x = m.m[0][0] / m.m[3][0];
+        float y = m.m[1][0] / m.m[3][0];
+        float z = m.m[2][0] / m.m[3][0];
+        float w = m.m[3][0] / m.m[3][0];
+        
+        return new VecF(x, y, z, w);
+    }
 }

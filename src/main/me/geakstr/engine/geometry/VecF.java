@@ -1,5 +1,7 @@
 package main.me.geakstr.engine.geometry;
 
+import java.util.Arrays;
+
 public class VecF {
     // Dimension
     public int dim;
@@ -47,6 +49,66 @@ public class VecF {
         for (int i = 0; i < this.dim; i++) {
             c[i] = m.m()[i][0] / m.m()[3][0];
         }
+    }
+    
+    public float x() {
+    	return c[0];
+    }
+    
+    public float y() {
+    	return c[1];
+    }
+
+    public float z() {
+    	if (c.length < 3) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	return c[2];
+    }
+    
+    public float w() {
+    	if (c.length < 4) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	return c[3];
+    }
+    
+    public void x(float x) {
+    	c[0] = x;
+    }
+    
+    public void y(float y) {
+    	c[1] = y;
+    }
+
+    public void z(float z) {
+    	if (c.length < 3) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	c[2] = z;
+    }
+    
+    public void w(float w) {
+    	if (c.length < 4) {
+	    	try {
+	            throw new Exception("The dimensions not exist");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+    	c[3] = w;
     }
 
     public VecF add(VecF v) {
@@ -129,6 +191,13 @@ public class VecF {
         VecF v = this.mul(l / norm());
         System.arraycopy(v.c, 0, c, 0, dim);
         return this;
+    }
+    
+    public static VecF proj(VecF a, int len) {
+    	float[] f = new float[len];
+    	Arrays.fill(f, 1);
+    	System.arraycopy(a.c, 0, f, 0, len);
+    	return new VecF(f);
     }
 
     public String toString() {
