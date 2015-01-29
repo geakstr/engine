@@ -33,8 +33,7 @@ public class Runner {
                     zbuffer[i] = Integer.MIN_VALUE;
                 }
 
-                Viewer viewer = new Viewer(new Vec3f(1, -3, 1), new Vec3f(2, 2, 3), new Vec3f(0, 0, 0), Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));
-
+                Viewer viewer = new Viewer(new Vec3f(1, -3, 1), new Vec3f(1.2, 2, 3), new Vec3f(0, 0, 0), Viewer.viewport(image.width() / 8, image.height() / 8, image.width() * 3 / 4, image.height() * 3 / 4));
 
                 Matrix modelview = Viewer.lookat(viewer.eye(), viewer.center(), new Vec3f(0, 1, 0));
                 Matrix projection = Matrix.identity(4);
