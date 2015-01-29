@@ -33,12 +33,11 @@ public class Runner extends Component {
                 }
                 volatile_image = createVolatileImage(WIDTH, HEIGHT);
             }
-            System.out.println("FFDS");
             volatile_image.getGraphics().drawImage(buffered_image, 0, 0, this);
             g.drawImage(volatile_image, 0, 0, this);
         } while (volatile_image.contentsLost());
     }
-    
+
     public static void main(String[] args) {
         try {
             Model model = new Model("src/resources/model/african_head.obj", "src/resources/tga/african_head_diffuse.tga");
